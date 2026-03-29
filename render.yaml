@@ -1,11 +1,12 @@
 services:
-  # Truly Unified Full Stack (Dockerized)
+  # Optimized Full Stack (Pre-built Assets)
   - type: web
-    name: quiz-fullstack-docker
-    runtime: docker
+    name: quiz-final-fullstack
+    runtime: python
     plan: free
-    # Since we're using Docker, we don't need build/start commands
-    # The Dockerfile handles both the frontend build and backend start.
+    # No npm build required on Render anymore - just Python!
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
-      - key: PORT
-        value: 8000
+      - key: PYTHON_VERSION
+        value: 3.10.0
