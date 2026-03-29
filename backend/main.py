@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import List, Optional
 import sqlite3
@@ -268,6 +270,24 @@ async def submit_quiz(submission: SubmissionRequest):
         total=len(details),
         details=details
     )
+
+# Serve frontend files from frontend/dist
+# This will handle the React production build
+frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
+
+if os.path.exists(frontend_path):
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_path, "assets")), name="assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_react_app(full_path: str):
+        # Ignore API routes
+        if full_path.startswith("subjects") or full_path.startswith("questions") or full_path.startswith("submit"):
+            raise HTTPException(status_code=404)
+        
+        index_file = os.path.join(frontend_path, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        return {"error": "Frontend build not found"}
 
 if __name__ == "__main__":
     import uvicorn

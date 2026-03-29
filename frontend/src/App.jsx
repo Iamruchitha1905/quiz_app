@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import './index.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:8000');
 
 const App = () => {
   const [view, setView] = useState('welcome'); // welcome, selection, quiz, result
