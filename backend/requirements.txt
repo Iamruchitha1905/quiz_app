@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-multipart
+# sqlite3 is built-in to Python
